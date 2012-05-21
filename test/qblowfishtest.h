@@ -8,6 +8,7 @@ class QBlowfishTest: public QObject
 {
     Q_OBJECT
 private slots:
+    void blowfishTest_data();
     void blowfishTest();
 };
 

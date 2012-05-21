@@ -27,30 +27,83 @@
 #include "qblowfish.h"
 #include "qblowfish_p.h"
 #include <QtEndian>
+#include <QDebug>
 
 QBlowfish::QBlowfish(const QByteArray &key)
     : m_key(key)
     , m_initialized(false)
+    , m_paddingEnabled(false)
 {
 }
 
-QByteArray QBlowfish::encryptBlock(const QByteArray &clearText)
+void QBlowfish::setPaddingEnabled(bool enabled)
 {
-    Q_ASSERT(clearText.size() == 8);
-    if (clearText.size() == 8 && init()) {
+    m_paddingEnabled = enabled;
+}
+
+bool QBlowfish::paddingEnabled() const
+{
+    return m_paddingEnabled;
+}
+
+QByteArray QBlowfish::encrypt(const QByteArray &_clearText)
+{
+    QByteArray clearText(_clearText);
+    if (clearText.isEmpty()) {
+        return QByteArray();
+    }
+
+    if (paddingEnabled()) {
+        // Add padding as per PKCS5
+        quint8 paddingLength = 8 - (clearText.size() % 8);
+        if (paddingLength == 0) {
+            paddingLength = 8;
+        }
+        QByteArray paddingBa(paddingLength, static_cast<char>(paddingLength));
+        clearText.append(paddingBa);
+    } else {
+        if (clearText.size() % 8 != 0) {
+            qWarning("Cannot encrypt. Clear-text length is not a multiple of 8 and padding is not enabled.");
+            return QByteArray();
+        }
+    }
+
+    Q_ASSERT(clearText.size() % 8 == 0);
+    if ((clearText.size() % 8 == 0) && init()) {
+
         QByteArray copyBa(clearText.constData(), clearText.size());
-        coreEncrypt(copyBa.data());
+        for (int i = 0; i < clearText.size(); i += 8) {
+            coreEncrypt(copyBa.data() + i);
+        }
         return copyBa;
+
     }
     return QByteArray();
 }
 
-QByteArray QBlowfish::decryptBlock(const QByteArray &cipherText)
+QByteArray QBlowfish::decrypt(const QByteArray &cipherText)
 {
-    Q_ASSERT(cipherText.size() == 8);
-    if (cipherText.size() == 8 && init()) {
+    if (cipherText.isEmpty()) {
+        return QByteArray();
+    }
+
+    Q_ASSERT(cipherText.size() % 8 == 0);
+    if ((cipherText.size() % 8 == 0) && init()) {
+
         QByteArray copyBa(cipherText.constData(), cipherText.size());
-        coreDecrypt(copyBa.data());
+        for (int i = 0; i < cipherText.size(); i += 8) {
+            coreDecrypt(copyBa.data() + i);
+        }
+
+        if (paddingEnabled()) {
+            // Remove padding as per PKCS5
+            quint8 paddingLength = static_cast<quint8>(copyBa.right(1).at(0));
+            QByteArray paddingBa(paddingLength, static_cast<char>(paddingLength));
+            if (copyBa.right(paddingLength) == paddingBa) {
+                return copyBa.left(copyBa.length() - paddingLength);
+            }
+            return QByteArray();
+        }
         return copyBa;
     }
     return QByteArray();

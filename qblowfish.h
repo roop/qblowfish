@@ -9,9 +9,27 @@ public:
     QBlowfish(const QByteArray &key);
     bool init();
 
-    // encrypt/decrypt 8 bytes of data
-    QByteArray encryptBlock(const QByteArray &clearText);
-    QByteArray decryptBlock(const QByteArray &cipherText);
+    // Padding:
+    //
+    // Blowfish works on 8-byte blocks. Padding makes it usable even
+    // in case where the input size is not in exact 8-byte blocks.
+    //
+    // If padding is disabled (the default), encrypt() will work only if the
+    // input size (in bytes) is a multiple of 8. (If it's not a multiple of 8,
+    // encrypt() will return a null bytearray.)
+    //
+    // If padding is enabled, we increase the input length to a multiple of 8
+    // by padding bytes as per PKCS5
+    //
+    // If padding was enabled during encryption, it should be enabled during
+    // decryption for correct decryption (and vice versa).
+
+    void setPaddingEnabled(bool enabled);
+    bool paddingEnabled() const;
+
+    // Encrypt / decrypt
+    QByteArray encrypt(const QByteArray &clearText);
+    QByteArray decrypt(const QByteArray &cipherText);
 
 private:
     // core encrypt/decrypt methods
@@ -20,6 +38,7 @@ private:
 
     QByteArray m_key;
     bool m_initialized;
+    bool m_paddingEnabled;
     QByteArray m_parray;
     QByteArray m_sbox1, m_sbox2, m_sbox3, m_sbox4;
 };

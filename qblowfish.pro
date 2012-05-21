@@ -15,7 +15,7 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += main.cpp \
+SOURCES += example/main.cpp \
     qblowfish.cpp
 
 HEADERS += \

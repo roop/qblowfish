@@ -7,15 +7,14 @@ int main(int argc, char *argv[])
     Q_UNUSED(argc);
     Q_UNUSED(argv);
 
-    QBlowfish bf;
-    bf.init(QByteArray::fromHex(QByteArray("0000000000000000")));
+    QBlowfish bf(QByteArray::fromHex(QByteArray("0000000000000000")));
     QByteArray clear = QByteArray::fromHex(QByteArray("0000000000000000"));
     qDebug() << "clr:" << clear.toHex();
-    bf.coreEncrypt(clear.data());
-    qDebug() << "enc:" << clear.toHex();
-    Q_ASSERT(clear == QByteArray::fromHex(QByteArray("4EF997456198DD78")));
-    bf.coreDecrypt(clear.data());
-    qDebug() << "dec:" << clear.toHex();
-    Q_ASSERT(clear == QByteArray::fromHex(QByteArray("0000000000000000")));
+    QByteArray cipher = bf.encryptBlock(clear);
+    qDebug() << "enc:" << cipher.toHex();
+    Q_ASSERT(cipher == QByteArray::fromHex(QByteArray("4EF997456198DD78")));
+    QByteArray decrypted = bf.decryptBlock(cipher);
+    qDebug() << "dec:" << decrypted.toHex();
+    Q_ASSERT(decrypted == QByteArray::fromHex(QByteArray("0000000000000000")));
     return 0;
 }

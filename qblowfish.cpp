@@ -25,21 +25,54 @@
 */
 
 #include "qblowfish.h"
-#include "qblowfish_init_p.h"
+#include "qblowfish_p.h"
 #include <QtEndian>
 
-QBlowfish::QBlowfish()
+QBlowfish::QBlowfish(const QByteArray &key)
+    : m_key(key)
+    , m_initialized(false)
 {
 }
 
-void QBlowfish::init(const QByteArray &key)
+QByteArray QBlowfish::encryptBlock(const QByteArray &clearText)
 {
+    Q_ASSERT(clearText.size() == 8);
+    if (clearText.size() == 8 && init()) {
+        QByteArray copyBa(clearText.constData(), clearText.size());
+        coreEncrypt(copyBa.data());
+        return copyBa;
+    }
+    return QByteArray();
+}
+
+QByteArray QBlowfish::decryptBlock(const QByteArray &cipherText)
+{
+    Q_ASSERT(cipherText.size() == 8);
+    if (cipherText.size() == 8 && init()) {
+        QByteArray copyBa(cipherText.constData(), cipherText.size());
+        coreDecrypt(copyBa.data());
+        return copyBa;
+    }
+    return QByteArray();
+}
+
+bool QBlowfish::init()
+{
+    if (m_initialized) {
+        return true;
+    }
+
+    if (m_key.isEmpty()) {
+        return false;
+    }
+
     m_sbox1 = QByteArray::fromHex(QByteArray::fromRawData(sbox0, SBOX_SIZE_BYTES * 2));
     m_sbox2 = QByteArray::fromHex(QByteArray::fromRawData(sbox1, SBOX_SIZE_BYTES * 2));
     m_sbox3 = QByteArray::fromHex(QByteArray::fromRawData(sbox2, SBOX_SIZE_BYTES * 2));
     m_sbox4 = QByteArray::fromHex(QByteArray::fromRawData(sbox3, SBOX_SIZE_BYTES * 2));
     m_parray = QByteArray::fromHex(QByteArray::fromRawData(parray, PARRAY_SIZE_BYTES * 2));
 
+    const QByteArray &key = m_key;
     int keyLength = key.length();
     for (int i = 0; i < PARRAY_SIZE_BYTES; i++) {
         m_parray[i] = static_cast<char>(static_cast<quint8>(m_parray[i]) ^ static_cast<quint8>(key[i % keyLength]));
@@ -76,6 +109,8 @@ void QBlowfish::init(const QByteArray &key)
             }
         }
     }
+
+    m_initialized = true;
 }
 
 void QBlowfish::coreEncrypt(char *x) // encrypts 8 bytes pointed to by x, result is written to the same location

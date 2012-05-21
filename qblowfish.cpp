@@ -116,6 +116,7 @@ bool QBlowfish::init()
     }
 
     if (m_key.isEmpty()) {
+        qWarning("Cannot init. Key is empty.");
         return false;
     }
 

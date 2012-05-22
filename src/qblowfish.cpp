@@ -110,6 +110,11 @@ QByteArray QBlowfish::decrypted(const QByteArray &cipherText)
     return QByteArray();
 }
 
+/*
+  Core encryption code follows. This is an implementation of the Blowfish algorithm as described at:
+  http://www.schneier.com/paper-blowfish-fse.html
+*/
+
 bool QBlowfish::init()
 {
     if (m_initialized) {

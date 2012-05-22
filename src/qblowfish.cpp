@@ -46,7 +46,7 @@ bool QBlowfish::paddingEnabled() const
     return m_paddingEnabled;
 }
 
-QByteArray QBlowfish::encrypt(const QByteArray &_clearText)
+QByteArray QBlowfish::encrypted(const QByteArray &_clearText)
 {
     QByteArray clearText(_clearText);
     if (clearText.isEmpty()) {
@@ -81,7 +81,7 @@ QByteArray QBlowfish::encrypt(const QByteArray &_clearText)
     return QByteArray();
 }
 
-QByteArray QBlowfish::decrypt(const QByteArray &cipherText)
+QByteArray QBlowfish::decrypted(const QByteArray &cipherText)
 {
     if (cipherText.isEmpty()) {
         return QByteArray();

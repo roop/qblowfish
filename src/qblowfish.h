@@ -28,11 +28,11 @@ public:
     bool paddingEnabled() const;
 
     // Encrypt / decrypt
-    QByteArray encrypt(const QByteArray &clearText);
-    QByteArray decrypt(const QByteArray &cipherText);
+    QByteArray encrypted(const QByteArray &clearText);
+    QByteArray decrypted(const QByteArray &cipherText);
 
 private:
-    // core encrypt/decrypt methods
+    // core encrypt/decrypt methods, encrypts/decrypts in-place
     void coreEncrypt(char *x);
     void coreDecrypt(char *x);
 

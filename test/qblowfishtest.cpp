@@ -56,9 +56,9 @@ void QBlowfishTest::blowfishTest()
     QByteArray cipherTextBytes = QByteArray::fromHex(cipherText.toLatin1());
 
     QBlowfish bf(keyBytes);
-    QByteArray encryptedBytes = bf.encrypt(clearTextBytes);
+    QByteArray encryptedBytes = bf.encrypted(clearTextBytes);
     QVERIFY(cipherTextBytes == encryptedBytes);
-    QByteArray decryptedBytes = bf.decrypt(encryptedBytes);
+    QByteArray decryptedBytes = bf.decrypted(encryptedBytes);
     QVERIFY(clearTextBytes == decryptedBytes);
 }
 
@@ -99,11 +99,11 @@ void QBlowfishTest::blowfishTestSameKey()
     for (int i = 0; i < clearTextAndCipherText.count(); i += 2) {
         QByteArray clearText = clearTextAndCipherText.at(i).toLatin1();
         QByteArray cipherText = QByteArray::fromHex(clearTextAndCipherText.at(i + 1).toLatin1());
-        QByteArray encrypted = bf1.encrypt(clearText);
+        QByteArray encrypted = bf1.encrypted(clearText);
         QVERIFY(encrypted == cipherText);
-        QByteArray sameInstanceDecrypted = bf1.decrypt(encrypted);
+        QByteArray sameInstanceDecrypted = bf1.decrypted(encrypted);
         QVERIFY(sameInstanceDecrypted == clearText);
-        QByteArray otherInstanceDecrypted = bf2.decrypt(encrypted);
+        QByteArray otherInstanceDecrypted = bf2.decrypted(encrypted);
         QVERIFY(otherInstanceDecrypted == clearText);
     }
 }

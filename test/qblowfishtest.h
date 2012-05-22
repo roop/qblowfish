@@ -10,6 +10,8 @@ class QBlowfishTest: public QObject
 private slots:
     void blowfishTest_data();
     void blowfishTest();
+    void blowfishTestSameKey_data();
+    void blowfishTestSameKey();
 };
 
 #endif // QBLOWFISHTEST_H

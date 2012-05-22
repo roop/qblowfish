@@ -62,4 +62,50 @@ void QBlowfishTest::blowfishTest()
     QVERIFY(clearTextBytes == decryptedBytes);
 }
 
+void QBlowfishTest::blowfishTestSameKey_data()
+{
+    QTest::addColumn<QString>("key");
+    QTest::addColumn<QStringList>("clearTextAndCipherText");
+
+    /*
+    Test vectors generated using Python Cryptography Toolkit using this code:
+    import Crypto
+    from Crypto.Cipher import Blowfish
+    def generate(key, clear):
+        bf = Blowfish.new(key);
+        cipher = bf.encrypt(clear);
+        print "[" + clear + "]  " + cipher.encode("hex");
+    */
+
+    QTest::newRow( "1") << "Caput Draconis"
+                        << (QStringList()
+                            << "ABCDEFGH" << "ea98b72a1a91af08"
+                            << "0123456789abcdef12341234" << "088fc006a93324f99ab889aff84e3c602bf330e8b7d874fe"
+                            << "Lorem ipsum dolorsitamet" << "cad01675711bfbfc9e9edc603583e3fc08a54351fc9ad35c"
+                            );
+}
+
+void QBlowfishTest::blowfishTestSameKey()
+{
+    QFETCH(QString, key);
+    QFETCH(QStringList, clearTextAndCipherText);
+
+    QBlowfish bf1(key.toLatin1());
+    bf1.init();
+
+    QBlowfish bf2(key.toLatin1());
+    bf2.init();
+
+    for (int i = 0; i < clearTextAndCipherText.count(); i += 2) {
+        QByteArray clearText = clearTextAndCipherText.at(i).toLatin1();
+        QByteArray cipherText = QByteArray::fromHex(clearTextAndCipherText.at(i + 1).toLatin1());
+        QByteArray encrypted = bf1.encrypt(clearText);
+        QVERIFY(encrypted == cipherText);
+        QByteArray sameInstanceDecrypted = bf1.decrypt(encrypted);
+        QVERIFY(sameInstanceDecrypted == clearText);
+        QByteArray otherInstanceDecrypted = bf2.decrypt(encrypted);
+        QVERIFY(otherInstanceDecrypted == clearText);
+    }
+}
+
 QTEST_MAIN(QBlowfishTest)

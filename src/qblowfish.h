@@ -14,9 +14,9 @@ public:
     // Blowfish works on 8-byte blocks. Padding makes it usable even
     // in case where the input size is not in exact 8-byte blocks.
     //
-    // If padding is disabled (the default), encrypt() will work only if the
+    // If padding is disabled (the default), encrypted() will work only if the
     // input size (in bytes) is a multiple of 8. (If it's not a multiple of 8,
-    // encrypt() will return a null bytearray.)
+    // encrypted() will return a null bytearray.)
     //
     // If padding is enabled, we increase the input length to a multiple of 8
     // by padding bytes as per PKCS5

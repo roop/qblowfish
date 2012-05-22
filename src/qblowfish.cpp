@@ -171,6 +171,7 @@ bool QBlowfish::init()
     }
 
     m_initialized = true;
+    return true;
 }
 
 void QBlowfish::coreEncrypt(char *x) // encrypts 8 bytes pointed to by x, result is written to the same location

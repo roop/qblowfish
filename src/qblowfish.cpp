@@ -141,7 +141,7 @@ bool QBlowfish::init()
     char seed[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     // Update p-array
-    for (int i = 0; i < 18; i += 2) {
+    for (int i = 0; i < (PARRAY_SIZE_BYTES / 4); i += 2) {
         coreEncrypt(seed);
         for (int j = 0; j < 8; j++) {
             // P1 = xL; P2 = xR
@@ -161,7 +161,7 @@ bool QBlowfish::init()
         }
         Q_ASSERT(sbox != 0);
 
-        for (int i = 0; i < 256; i += 2) {
+        for (int i = 0; i < (SBOX_SIZE_BYTES / 4); i += 2) {
             coreEncrypt(seed);
             for (int j = 0; j < 8; j++) {
                 // S1,1 = xL; S1,2 = xR

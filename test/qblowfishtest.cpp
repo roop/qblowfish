@@ -108,4 +108,55 @@ void QBlowfishTest::blowfishTestSameKey()
     }
 }
 
+void QBlowfishTest::blowfishTestPadding_data()
+{
+    QTest::addColumn<QString>("key");
+    QTest::addColumn<QStringList>("clearTexts");
+
+    // Verify that with padding enabled we're able to encrypt/decrypt stuff of any length.
+    // The encrypted stuff is not verified, for want of something golden to check with.
+    // We only check whether decryption gives us back the original string correctly.
+
+    QTest::newRow("multiples-of-8")
+                        << "Caput Draconis"
+                        << (QStringList()
+                            << "ABCDEFGH"
+                            << "0123456789abcdef12341234"
+                            << "Lorem ipsum dolorsitamet"
+                            );
+    QTest::newRow("any-length")
+                        << "Lorem ipsum dolor sit amet"
+                        << (QStringList()
+                            << "Caput Draconis"
+                            << "Flibbertigibbet"
+                            << "Mimbulus mimbletonia"
+                            << "Banana Fritters"
+                            << "I Solemly Swear I am up to no good"
+                            );
+}
+
+void QBlowfishTest::blowfishTestPadding()
+{
+    QFETCH(QString, key);
+    QFETCH(QStringList, clearTexts);
+
+    QBlowfish *bf1 = new QBlowfish(key.toLatin1());
+    bf1->setPaddingEnabled(true);
+
+    QList<QByteArray> encryptedBas;
+    foreach (const QString &clearText, clearTexts) {
+        encryptedBas << bf1->encrypted(clearText.toLatin1());
+    }
+    delete bf1;
+
+    QBlowfish *bf2 = new QBlowfish(key.toLatin1());
+    bf2->setPaddingEnabled(true);
+
+    for (int i = 0; i < encryptedBas.length(); i++) {
+        QByteArray encryptedBa = encryptedBas.at(i);
+        QByteArray decryptedBa = bf2->decrypted(encryptedBa);
+        QVERIFY(decryptedBa == clearTexts.at(i).toLatin1());
+    }
+}
+
 QTEST_MAIN(QBlowfishTest)

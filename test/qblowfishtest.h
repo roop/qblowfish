@@ -12,6 +12,8 @@ private slots:
     void blowfishTest();
     void blowfishTestSameKey_data();
     void blowfishTestSameKey();
+    void blowfishTestPadding_data();
+    void blowfishTestPadding();
 };
 
 #endif // QBLOWFISHTEST_H

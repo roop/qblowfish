@@ -1,7 +1,7 @@
 /*
   This file is part of QBlowfish and is licensed under the MIT License
 
-  Copyright © 2012 Roopesh Chander <roop@forwardbias.in>
+  Copyright (C) 2012 Roopesh Chander <roop@forwardbias.in>
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the

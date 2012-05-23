@@ -4,7 +4,7 @@ QBlowfish is a [Qt](http://qt.nokia.com/) implementation of the [Blowfish](http:
 
 The Blowfish algorithm requires the input in 8-byte blocks. To simplify usage, QBlowfish can optionally add [PKCS5 padding](http://tools.ietf.org/html/rfc5652#section-6.3) to the input data. (For example, if the input is only 60 bytes long, 4 bytes will be padded to bring the bytecount to a multiple of 8.) When padding is enabled during decryption, QBlowfish will also remove the padded bytes from the output.
 
-You only need to add two files (src/qblowfish.c and src/qblowfish.h) to your project. You can then use the QBlowfish class to encrypt and decrypt stuff.
+You only need to add 3 files (src/*) to your project. You can then use the QBlowfish class to encrypt and decrypt stuff.
 
     QByteArray secretKey("This is a secret")
     QString clearText("Stuff to encrypt");

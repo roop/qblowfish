@@ -157,6 +157,7 @@ void QBlowfishTest::blowfishTestPadding()
         QByteArray decryptedBa = bf2->decrypted(encryptedBa);
         QVERIFY(decryptedBa == clearTexts.at(i).toLatin1());
     }
+    delete bf2;
 }
 
 QTEST_MAIN(QBlowfishTest)

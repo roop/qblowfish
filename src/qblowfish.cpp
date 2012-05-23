@@ -41,7 +41,7 @@ void QBlowfish::setPaddingEnabled(bool enabled)
     m_paddingEnabled = enabled;
 }
 
-bool QBlowfish::paddingEnabled() const
+bool QBlowfish::isPaddingEnabled() const
 {
     return m_paddingEnabled;
 }
@@ -53,7 +53,7 @@ QByteArray QBlowfish::encrypted(const QByteArray &_clearText)
         return QByteArray();
     }
 
-    if (paddingEnabled()) {
+    if (isPaddingEnabled()) {
         // Add padding as per PKCS5
         // Ref: RFC 5652 http://tools.ietf.org/html/rfc5652#section-6.3
         quint8 paddingLength = 8 - (clearText.size() % 8);
@@ -96,7 +96,7 @@ QByteArray QBlowfish::decrypted(const QByteArray &cipherText)
             coreDecrypt(copyBa.data() + i);
         }
 
-        if (paddingEnabled()) {
+        if (isPaddingEnabled()) {
             // Remove padding as per PKCS5
             quint8 paddingLength = static_cast<quint8>(copyBa.right(1).at(0));
             QByteArray paddingBa(paddingLength, static_cast<char>(paddingLength));

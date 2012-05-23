@@ -25,7 +25,7 @@ public:
     // decryption for correct decryption (and vice versa).
 
     void setPaddingEnabled(bool enabled);
-    bool paddingEnabled() const;
+    bool isPaddingEnabled() const;
 
     // Encrypt / decrypt
     QByteArray encrypted(const QByteArray &clearText);

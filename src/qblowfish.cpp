@@ -57,9 +57,6 @@ QByteArray QBlowfish::encrypted(const QByteArray &_clearText)
         // Add padding as per PKCS5
         // Ref: RFC 5652 http://tools.ietf.org/html/rfc5652#section-6.3
         quint8 paddingLength = 8 - (clearText.size() % 8);
-        if (paddingLength == 0) {
-            paddingLength = 8;
-        }
         QByteArray paddingBa(paddingLength, static_cast<char>(paddingLength));
         clearText.append(paddingBa);
     } else {

@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     }
     decryptedFile.close();
     encryptedFile2.close();
-    qDebug() << "Decrypted data written to decrypted.dat";
+    qDebug() << "Decrypted data written to decrypted.txt";
 
     return 0;
 }

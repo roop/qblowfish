@@ -4,7 +4,7 @@ TEMPLATE = app
 QT       += core
 QT       -= gui
 
-CONFIG   += qtestlib
+QT       += testlib
 
 SOURCES += ../src/qblowfish.cpp \
            qblowfishtest.cpp

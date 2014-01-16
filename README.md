@@ -21,7 +21,7 @@ QBlowfish is not optimized for speed. It processes the data in bytes (most other
 
 Unit tests are written using QTestLib. Tests include [the official test vectors](http://www.schneier.com/code/vectors.txt).
 
-QBlowfish has been tested with Qt 4.8 on Windows and Linux.
+QBlowfish is known to work fine with Qt versions 4.8, 5.0 and 5.1, on Windows, Mac and Linux platforms (not all combinations have been tested, though). If you find it's not working in your setup, please [open an issue](https://github.com/roop/qblowfish/issues).
 
 ### License
 
